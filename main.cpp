@@ -70,7 +70,7 @@ vector<string> ScanWifiNetworks(HANDLE hWlan, GUID guidInterface) {
         throw("[x] Unable to obtain network list");
 
     for(unsigned int i = 0; i < wlanNetworkList->dwNumberOfItems; i++)
-        OutputNetworks.push_back(string((const char*)wlanNetworkList->Network[i].dot11Ssid.ucSSID);
+        OutputNetworks.push_back(string((const char*)wlanNetworkList->Network[i].dot11Ssid.ucSSID));
 
     WlanRegisterNotification(hWlan, WLAN_NOTIFICATION_SOURCE_NONE, TRUE, NULL, NULL, NULL, &dwPrevNotif);
 

